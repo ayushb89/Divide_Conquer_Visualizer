@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divide &amp; Conquer Visualizer</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════ -->
+  <header>
+    <div class="hdr-icon">⚡</div>
+    <h1>Divide &amp; <em>Conquer</em> Visualizer</h1>
+  </header>
+
+  <!-- ══════════════════════════════════════
+       CONTROLS BAR
+  ═══════════════════════════════════════ -->
+  <div class="ctrl-bar">
+
+    <!-- Algorithm selector — triggers info panel + data regeneration -->
+    <select id="algorithm" onchange="onAlgoChange()">
+      <option value="merge">Merge Sort</option>
+      <option value="quick">Quick Sort</option>
+      <option value="minmax">Min &amp; Max</option>
+      <option value="subarray">Maximum Subarray</option>
+      <option value="matrix">Matrix Multiplication</option>
+      <option value="strassen">Strassen's Algorithm</option>
+      <option value="closest">Closest Pair of Points</option>
+      <option value="convex">Convex Hull</option>
+    </select>
+
+    <div class="sep"></div>
+    <button class="btn" onclick="generateData()">↺ Generate Data</button>
+    <div class="sep"></div>
+
+    <!-- Animation speed control (1 = slowest, 10 = fastest) -->
+    <div class="speed-wrap">
+      <span>Speed</span>
+      <input
+        type="range"
+        id="speedSlider"
+        min="1" max="10" value="5"
+        oninput="document.getElementById('speedVal').textContent = this.value"
+      >
+      <span id="speedVal">5</span>
+    </div>
+
+    <div class="sep"></div>
+    <button class="btn primary" id="startBtn" onclick="runAlgorithm()">▶ Start</button>
+
+  </div><!-- /ctrl-bar -->
+
+  <!-- ══════════════════════════════════════
+       MAIN CONTENT GRID
+       Left: visualization stage + legend + step message
+       Right: info panel with algorithm details
+  ═══════════════════════════════════════ -->
+  <div class="body-grid">
+
+    <!-- ── LEFT: Visualization Panel ── -->
+    <div class="viz-panel">
+
+      <!-- Canvas area: renders bars, SVG points, or matrix tables -->
+      <div class="viz-stage" id="vizStage">
+        <div class="empty">
+          <div class="empty-icon">📊</div>
+          <div>Click <strong>Generate Data</strong> to begin</div>
+        </div>
+      </div>
+
+      <!-- Color legend (shown only for sort algorithms) -->
+      <div class="legend" id="legend" style="display: none">
+        <div class="leg-item">
+          <div class="leg-sq" style="background: var(--bar-base)"></div>Unsorted
+        </div>
+        <div class="leg-item">
+          <div class="leg-sq" style="background: var(--bar-active)"></div>Active&nbsp;Range
+        </div>
+        <div class="leg-item">
+          <div class="leg-sq" style="background: var(--bar-cmp)"></div>Comparing
+        </div>
+        <div class="leg-item">
+          <div class="leg-sq" style="background: var(--bar-pivot)"></div>Pivot
+        </div>
+        <div class="leg-item">
+          <div class="leg-sq" style="background: var(--bar-sorted)"></div>Sorted
+        </div>
+      </div>
+
+      <!-- Step message / status bar at the bottom -->
+      <div class="step-msg" id="stepMsg">
+        Select an algorithm and click Generate Data to begin
+      </div>
+
+    </div><!-- /viz-panel -->
+
+    <!-- ── RIGHT: Info Panel ── -->
+    <div class="info-panel">
+
+      <!-- Algorithm name badge -->
+      <div class="algo-badge">
+        <div class="badge-type">Algorithm</div>
+        <div class="badge-name" id="algoName">Merge Sort</div>
+      </div>
+
+      <!-- Description card -->
+      <div class="icard">
+        <div class="icard-lbl">Description</div>
+        <div class="icard-val" id="description">—</div>
+      </div>
+
+      <!-- Recurrence relation card (highlighted) -->
+      <div class="icard rec-card">
+        <div class="icard-lbl">Recurrence Relation</div>
+        <div class="icard-val" id="recurrence">—</div>
+      </div>
+
+      <!-- Time complexity -->
+      <div class="icard">
+        <div class="icard-lbl">Time Complexity</div>
+        <div class="icard-val">
+          <span class="badge-pill pill-time" id="timeComp">—</span>
+        </div>
+      </div>
+
+      <!-- Space complexity -->
+      <div class="icard">
+        <div class="icard-lbl">Space Complexity</div>
+        <div class="icard-val">
+          <span class="badge-pill pill-space" id="spaceComp">—</span>
+        </div>
+      </div>
+
+    </div><!-- /info-panel -->
+
+  </div><!-- /body-grid -->
+
+  <!-- Script loaded last so DOM is ready -->
+  <script src="script.js"></script>
+
+</body>
+</html>
